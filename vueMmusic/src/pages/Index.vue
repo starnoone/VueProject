@@ -9,7 +9,7 @@
 				<div class="slider">
 					<div class="swiper-container">
 					    <div class="swiper-wrapper">
-					        <div class="swiper-slide" v-for="(v,k) in slider">
+					        <div class="swiper-slide" v-for="(v,k) in slider" :key="k">
 					        	<img :src='v.picUrl'>
 					        </div>
 					    </div>
@@ -22,7 +22,7 @@
 					<h2>歌曲排行榜</h2>
 					<div class="song-container">
 						<ul>
-							<li v-for = "(v,k) in songlist">
+							<li v-for = "(v,k) in songlist" :key="v.data.songid">
 								<div class="thumb">
 									<img :src="'https://y.gtimg.cn/music/photo_new/T002R90x90M000'+v.data.albummid+'.jpg?max_age=2592000'">
 								</div>
