@@ -10,10 +10,12 @@
 				<div class="singer-item" v-for = "(item,k) in indexTool" :key = "k">
 					<h2 v-text="indexTool[k]"></h2>
 					<ul>
-						<li v-for = "(singer,i) in singerList[k].singer" :key="singer.Fsinger_id">
-							<img :src="'https://y.gtimg.cn/music/photo_new/T001R150x150M000'+singer.Fsinger_mid+'.jpg?max_age=2592000'">
-							<span v-text = "singer.Fsinger_name"></span>
-						</li>
+						<router-link :to="'/singer/'+singer.Fsinger_mid" v-for = "(singer,i) in singerList[k].singer" :key="singer.Fsinger_id">
+							<li>
+								<img :src="'https://y.gtimg.cn/music/photo_new/T001R150x150M000'+singer.Fsinger_mid+'.jpg?max_age=2592000'">
+								<span v-text = "singer.Fsinger_name"></span>
+							</li>
+						</router-link>
 					</ul>
 				</div>
 			</div>
@@ -63,10 +65,12 @@ export default{
 			this.getIndexTool();
 			this.getOrderSingerList(data.data.list);
 			this.LoadingState = false;
+			console.log(this.singerList);
 		});
 
 		this.myScroll = new BScroll('.singer-wrapper',{
-			probeType:3
+			probeType:3,
+			click:true
 		});
 		this.myScroll.on('scroll',(pos)=>{
 			//console.log(pos);
