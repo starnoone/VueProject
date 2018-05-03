@@ -1,22 +1,25 @@
 <template>
 	<div class="play-song">
 		<div class="header">
-			<h1><i @click="back"></i>{{getSong.musicData.singer[0].name}}</h1>
-			<span>{{getSong.musicData.songname}}</span>
+			<h1><i @click="back"></i>薛之谦</h1>
+			<span>演员</span>
 		</div>
-		<div class="playing" style="animation-play-state: running;">
-			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+mid+'.jpg?max_age=2592000'">
+		<div class="playing">
+			<img src="https://y.gtimg.cn/music/photo_new/T002R300x300M000003y8dsH2wBHlo.jpg?max_age=2592000">
 		</div>
 		<div class="opt-btn">
 			<a href="javascript:" class="mode"></a>
 			<a href="javascript:" class="prev"></a>
-			<a href="javascript:" class="playPause" :class="[getPlayState?'pause':'play']" @click="playOrPause"></a>
+			<a href="javascript:" class="playPause"></a>
 			<a href="javascript:" class="next"></a>
 			<a href="javascript:" class="like"></a>
 		</div>
 		<div class="bg-alb">
-			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+mid+'.jpg?max_age=2592000'">
+			<img src="https://y.gtimg.cn/music/photo_new/T002R300x300M000003y8dsH2wBHlo.jpg?max_age=2592000">
 		</div>
+		<div class="audio">
+	  		<audio id="player" :src="src" autoplay="autoplay"></audio>
+	  	</div>
 	</div>
 </template>
 
@@ -26,23 +29,14 @@ import jsonp from 'jsonp';
 //引入接口地址
 import api from '../api/songApi.js';
 
-//引入Vuex
-import {mapGetters,mapMutations} from 'vuex';
 export default{
 	name:'',
 	data(){
 		return {
 			smid:'',
 			mid:'',
-			src:'',
+			src:''
 		}
-	},
-	computed:{
-		...mapGetters([
-			'getPlaySrc',
-			'getPlayState',
-			'getSong'
-		])
 	},
 	created(){
 		this.smid = this.$route.params.smid;
@@ -51,30 +45,12 @@ export default{
 		jsonp(url,{param:'callback'},(err,data)=>{
 			let vkey = data.data.items[0].vkey;
 			this.src = `http://dl.stream.qqmusic.qq.com/C400${this.smid}.m4a?vkey=${vkey}&guid=7120953682&uin=0&fromtag=66`;
-			//将当前获取的播放地址更新到state
-			this.setPlaySrc(this.src);
 		})
 	},
 	methods:{
 		back(){
 			this.$router.go(-1)
-		},
-		playOrPause(){
-			var playerNode = document.querySelector('#player');
-			var playingNode = document.querySelector('.playing');
-			if(this.getPlayState){
-				playerNode.pause();
-				playingNode.style.animationPlayState = 'paused';
-			}else{
-				playerNode.play();
-				playingNode.style.animationPlayState = 'running';
-			}
-			this.setPlayState(!this.getPlayState);
-		},
-		...mapMutations({
-			'setPlaySrc':'setPlaySrc',
-			'setPlayState':'setPlayState',
-		}),
+		}
 	}
 }
 </script>
@@ -82,8 +58,6 @@ export default{
 <style lang='scss' scoped>
 @import '../assets/scss/_themes.scss';
 .play-song{
-	z-index:9999;
-	height:100vh;
 	.header{
 		text-align: center;
 	    color: $white;
@@ -169,18 +143,11 @@ export default{
 			background-size:100% 100%;
 			background-position: center center;
 	    }
-	    
-    	.play{
+	    .playPause{
 			background: url(../assets/icon/play.png) no-repeat;
 			background-size:100% 100%;
 			background-position: center center;
-    	}
-		.pause{
-			background: url(../assets/icon/pause.png) no-repeat;
-			background-size:100% 100%;
-			background-position: center center;
-    	}
-	    
+	    }
 	    .next{
 			background: url(../assets/icon/next.png) no-repeat;
 			background-size:100% 100%;

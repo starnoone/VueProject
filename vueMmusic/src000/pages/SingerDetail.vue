@@ -8,7 +8,7 @@
 			<div class="content">
 				<div class="song-list">
 					<ul>
-						<router-link :to="'/play/' + song.musicData.songmid + '/' + song.musicData.albummid" tag="div" v-for="(song,k) in singerDetail.list" @click.native="watchSong(song)">
+						<router-link :to="'/play/' + song.musicData.songmid + '/' + song.musicData.albummid" tag="div" v-for="(song,k) in singerDetail.list">
 							<li>
 								<h2 v-text="song.musicData.songname"></h2>
 								<p>{{song.musicData.singer[0].name}} - {{song.musicData.albumname}}</p>
@@ -33,9 +33,6 @@ import BScroll from 'better-scroll';
 import jsonp from 'jsonp';
 //引入接口地址
 import api from '../api/singerApi.js';
-//引入Vuex
-import {mapGetters,mapMutations} from 'vuex';
-
 export default{
 	name:'',
 	data(){
@@ -45,11 +42,6 @@ export default{
 			thumb:'',
 			LoadingState:true
 		}
-	},
-	computed:{
-		...mapGetters([
-			'getSong'
-		])
 	},
 	components:{
 		Loading
@@ -61,8 +53,7 @@ export default{
 		this.myScroll = new BScroll('.detail-wrapper',{
 			scrollY:true,
 			click:true
-		});
-
+		})
 	},
 	methods:{
 		getData:function(){
@@ -76,12 +67,6 @@ export default{
 		},
 		back:function(){
 			this.$router.go(-1);
-		},
-		...mapMutations({
-			'setSong':'setSong'
-		}),
-		watchSong(song){
-			this.setSong(song);
 		}
 	}
 
