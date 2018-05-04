@@ -3,6 +3,10 @@ export default {
 	playSrc:'',
 	//播放状态
 	playState:true,
-	//歌曲数据
+	//当前歌曲数据
 	song:{},
+	//播放列表信息
+	playListSong:[],
+	//当前播放索引
+	curPlayIndex:0,
 }

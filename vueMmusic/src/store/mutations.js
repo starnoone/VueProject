@@ -10,3 +10,11 @@ export const setPlayState = (state,playState)=>{
 export const setSong = (state,songs)=>{
 	state.song = songs;
 }
+//设置当前歌曲播放列表
+export const setPlayListSong = (state,songData)=>{
+	state.playListSong.push(songData);
+}
+//设置当前歌曲播放索引
+export const setCurPlayIndex = (state,index)=>{
+	state.curPlayIndex = index
+}

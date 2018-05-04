@@ -78,10 +78,12 @@ export default{
 			this.$router.go(-1);
 		},
 		...mapMutations({
-			'setSong':'setSong'
+			'setSong':'setSong',
+			'setPlayListSong':'setPlayListSong'
 		}),
 		watchSong(song){
 			this.setSong(song);
+			this.setPlayListSong(song);
 		}
 	}
 

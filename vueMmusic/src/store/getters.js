@@ -10,3 +10,11 @@ export const getPlayState = (state)=>{
 export const getSong = (state)=>{
 	return state.song
 }
+//获取歌曲播放列表
+export const getPlayListSong = (state)=>{
+	return state.playListSong
+}
+//获取当前歌曲播放索引
+export const getCurPlayIndex = (state)=>{
+	return state.curPlayIndex
+}

@@ -12,25 +12,33 @@
 		
 		<div class="song-operator">
 	   		<a href="javascript:" class="play-paused" :class="[getPlayState?'pause':'play']"  @click="playOrPause()"></a>
-	   		<a href="javascript:" class="song-list"></a>
+	   		<a href="javascript:" class="song-list" @click="playListStatus()"></a>
 	   	</div>
 		<!-- S 播放器 -->
 		<div class="audio">
 	  		<audio id="player" :src="getPlaySrc" autoplay="autoplay"></audio>
 	  	</div>
 	  	<!-- E 播放器 -->
+	  	<!-- S 播放列表 -->
+	  	<PlayList :showState = "playListState" @close-play-list = "closePlayList"></PlayList>
+	  	<!-- E 播放列表 -->
 	</div>
 </template>
 
 <script>
 //引入Vuex
 import {mapGetters,mapMutations} from 'vuex';
+//引入play-list组件
+import PlayList from '@/components/PlayList';
 export default{
 	name:'',
 	data(){
 		return {
-
+			playListState:false,
 		}
+	},
+	components:{
+		PlayList
 	},
 	computed:{
 		...mapGetters([
@@ -54,7 +62,13 @@ export default{
 				playingNode.style.animationPlayState = 'running';
 			}
 			this.setPlayState(!this.getPlayState);
-		}
+		},
+		playListStatus(){
+			this.playListState = true;
+		},
+		closePlayList(){
+			this.playListState = false
+		},
 	}
 }
 </script>
@@ -114,19 +128,19 @@ export default{
 		display: inline-block;
   	}
     .play-paused{
-      margin-right:16px;
+        margin-right:16px;
     }
   	.play{
-  		 background:url(../assets/icon/play.png) no-repeat;
+  		background:url(../assets/icon/play.png) no-repeat;
   		background-size:100% 100%;
   	}
     .pause{
     	background:url(../assets/icon/pause.png) no-repeat;
      
-      background-size:100% 100%;
+        background-size:100% 100%;
     }
   	.song-list{
-		  background:url(../assets/icon/list.png) no-repeat;
+		background:url(../assets/icon/list.png) no-repeat;
   		background-size:100% 100%;
   	}
   }

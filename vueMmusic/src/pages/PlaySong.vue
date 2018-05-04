@@ -83,6 +83,7 @@ export default{
 @import '../assets/scss/_themes.scss';
 .play-song{
 	z-index:9999;
+	position: relative;
 	height:100vh;
 	.header{
 		text-align: center;
