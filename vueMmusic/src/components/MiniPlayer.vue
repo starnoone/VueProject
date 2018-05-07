@@ -1,7 +1,7 @@
 <template>
 	<div class="miniPlayer">
 		<!-- S 歌曲封面 -->
-		<div class="player-thumb" style="animation-play-state:running;">
+		<div class="player-thumb" :class="[getPlayState?'thumb-pause':'thumb-play']">
 			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+ getSong.musicData.albummid +'.jpg'">
 		</div>
 		<!-- E 歌曲封面 -->
@@ -56,10 +56,8 @@ export default{
 			var playingNode = document.querySelector('.player-thumb');
 			if(this.getPlayState){
 				playerNode.pause();
-				playingNode.style.animationPlayState = 'paused';
 			}else{
 				playerNode.play();
-				playingNode.style.animationPlayState = 'running';
 			}
 			this.setPlayState(!this.getPlayState);
 		},
@@ -89,6 +87,12 @@ export default{
     box-sizing: border-box;
 	.player-thumb{
 	    animation:circleAni 5s linear infinite;
+	    &.thumb-pause{
+	    	animation-play-state:running;
+	    }
+	    &.thumb-play{
+	    	animation-play-state:paused;
+	    }
 	    @keyframes circleAni{
 	    	from{
 	    		transform:rotateZ(0deg)

@@ -12,7 +12,7 @@ export const getSong = (state)=>{
 }
 //获取歌曲播放列表
 export const getPlayListSong = (state)=>{
-	return state.playListSong
+	return Array.prototype.slice.call(state.playListSong)
 }
 //获取当前歌曲播放索引
 export const getCurPlayIndex = (state)=>{

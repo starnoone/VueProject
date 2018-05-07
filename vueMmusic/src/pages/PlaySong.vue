@@ -56,10 +56,10 @@ export default{
 		})
 	},
 	methods:{
-		back(){
+		back(){//回退
 			this.$router.go(-1)
 		},
-		playOrPause(){
+		playOrPause(){//控制播放or暂停
 			var playerNode = document.querySelector('#player');
 			var playingNode = document.querySelector('.playing');
 			if(this.getPlayState){

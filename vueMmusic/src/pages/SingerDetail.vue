@@ -48,7 +48,8 @@ export default{
 	},
 	computed:{
 		...mapGetters([
-			'getSong'
+			'getSong',
+			'getPlayListSong'
 		])
 	},
 	components:{
@@ -65,25 +66,41 @@ export default{
 
 	},
 	methods:{
-		getData:function(){
+		getData:function(){//获取歌曲列表信息
 			let url = api.singerDetailApi+this.$route.params.sid;
 			jsonp(url,{param:'jsonpCallback'},(err,data)=>{
 				this.singerDetail = data.data;
-				console.log(this.singerDetail);
 				this.thumb = `<img src="https://y.gtimg.cn/music/photo_new/T001R300x300M000${this.singerDetail.singer_mid}.jpg" style="width:100%;">`;
 				this.LoadingState = false;
 			})
 		},
-		back:function(){
+		back:function(){//回退
 			this.$router.go(-1);
 		},
 		...mapMutations({
 			'setSong':'setSong',
-			'setPlayListSong':'setPlayListSong'
+			'setPlayListSong':'setPlayListSong',
+			'setPlayState':'setPlayState',
+			'setCurPlayIndex':'setCurPlayIndex'
 		}),
-		watchSong(song){
+		watchSong(song){//调用vuex方法，将song信息更新到state中（点击事件触发）
+			
 			this.setSong(song);
-			this.setPlayListSong(song);
+			//初始化状态
+			this.setPlayState (true);
+
+			//防止数据重复
+			let flag = 0;
+			let songId = song.musicData.songid;
+			this.getPlayListSong.forEach((val,k)=>{
+				if(songId == val.musicData.songid){
+					flag++;
+				}
+			});
+			if(flag<=0){
+				this.setPlayListSong(song);
+				this.setCurPlayIndex(this.getPlayListSong.length-1);
+			}
 		}
 	}
 

@@ -14,9 +14,9 @@
 				<div class="list-con">
 					<div class="songs">
 						<ul>
-							<router-link to="">
+							<router-link to="" v-for="(song,k) in getPlayListSong" :key="song.musicData.songmid" @click.native = "playList">
 							<li>
-								<span class="song-name cur"></span> 
+								<span class="song-name cur">{{song.musicData.songname}}</span> 
 								<span class="song-operator">
 									<i class="icon-op icon-favorate"></i> 
 									<i class="icon-op icon-delete"></i>
@@ -35,12 +35,21 @@
 </template>
 
 <script>
+//引入Vuex
+import {mapGetters,mapMutations} from 'vuex';
+
 export default{
 	name:'',
 	data(){
 		return {
 
 		}
+	},
+	computed:{
+		...mapGetters([
+			'getPlayListSong',
+			'getCurPlayIndex'
+		])
 	},
 	props:{
 		showState:{
@@ -51,6 +60,9 @@ export default{
 	methods:{
 		close(){
 			this.$emit('close-play-list',false)
+		},
+		playList(){
+			console.log(this.getCurPlayIndex)
 		}
 	}
 }
