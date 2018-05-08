@@ -4,18 +4,18 @@
 			<h1><i @click="back"></i>{{getSong.musicData.singer[0].name}}</h1>
 			<span>{{getSong.musicData.songname}}</span>
 		</div>
-		<div class="playing" style="animation-play-state: running;">
-			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+mid+'.jpg?max_age=2592000'">
+		<div class="playing" :class="[getPlayState?'thumb-pause':'thumb-play']">
+			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+getSong.musicData.albummid+'.jpg?max_age=2592000'">
 		</div>
 		<div class="opt-btn">
 			<a href="javascript:" class="mode"></a>
-			<a href="javascript:" class="prev"></a>
+			<a href="javascript:" class="prev" @click="playPrev"></a>
 			<a href="javascript:" class="playPause" :class="[getPlayState?'pause':'play']" @click="playOrPause"></a>
-			<a href="javascript:" class="next"></a>
+			<a href="javascript:" class="next" @click="playNext"></a>
 			<a href="javascript:" class="like"></a>
 		</div>
 		<div class="bg-alb">
-			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+mid+'.jpg?max_age=2592000'">
+			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+getSong.musicData.albummid+'.jpg?max_age=2592000'">
 		</div>
 	</div>
 </template>
@@ -41,19 +41,16 @@ export default{
 		...mapGetters([
 			'getPlaySrc',
 			'getPlayState',
-			'getSong'
+			'getSong',
+			'getCurPlayIndex',
+			'getPlayListSong'
 		])
 	},
 	created(){
 		this.smid = this.$route.params.smid;
 		this.mid = this.$route.params.mid;
-		let url = api.vKeyApi + `&songmid=${this.smid}&filename=C400${this.smid}.m4a`;
-		jsonp(url,{param:'callback'},(err,data)=>{
-			let vkey = data.data.items[0].vkey;
-			this.src = `http://dl.stream.qqmusic.qq.com/C400${this.smid}.m4a?vkey=${vkey}&guid=7120953682&uin=0&fromtag=66`;
-			//将当前获取的播放地址更新到state
-			this.setPlaySrc(this.src);
-		})
+		//获取播放路径
+		this._getPlaySrc(this.smid,this.mid);
 	},
 	methods:{
 		back(){//回退
@@ -64,16 +61,55 @@ export default{
 			var playingNode = document.querySelector('.playing');
 			if(this.getPlayState){
 				playerNode.pause();
-				playingNode.style.animationPlayState = 'paused';
 			}else{
 				playerNode.play();
-				playingNode.style.animationPlayState = 'running';
 			}
 			this.setPlayState(!this.getPlayState);
+		},
+		playPrev(){//上一首
+			let prevIndex = this.getCurPlayIndex-1;
+			prevIndex = prevIndex<=0?0:prevIndex;
+			//改变当前索引
+			this.setCurPlayIndex(prevIndex);
+			//改变当前歌曲信息
+			this.setSong(this.getPlayListSong[this.getCurPlayIndex]);
+			//改变当前歌曲路径
+			this._getPlaySrc(this.getSong.musicData.songmid,this.getSong.musicData.albummid);
+			//重置状态
+			this.setPlayState(true);
+		},
+		playNext(){
+			let nextIndex = this.getCurPlayIndex+1;
+			let maxIndex = this.getPlayListSong.length-1;
+			nextIndex = nextIndex>=maxIndex?maxIndex:nextIndex;
+			//改变当前索引
+			this.setCurPlayIndex(nextIndex);
+			//改变当前歌曲信息
+			this.setSong(this.getPlayListSong[this.getCurPlayIndex]);
+			//改变当前歌曲路径
+			let curMusicData = this.getPlayListSong[this.getCurPlayIndex].musicData;
+			this._getPlaySrc(curMusicData.songmid,curMusicData.albummid);
+			//重置状态
+			this.setPlayState(true);
+		},
+		_getPlaySrc(smid,mid){//获取播放路径函数
+			this.smid = smid;
+			this.mid  = mid;
+			let url = api.vKeyApi + `&songmid=${this.smid}&filename=C400${this.smid}.m4a`;
+			jsonp(url,{param:'callback'},(err,data)=>{
+				let vkey = data.data.items[0].vkey;
+				this.src = `http://dl.stream.qqmusic.qq.com/C400${this.smid}.m4a?vkey=${vkey}&guid=7120953682&uin=0&fromtag=66`;
+				//将当前获取的播放地址更新到state
+				this.setPlaySrc(this.src);
+			})
+			
+			
 		},
 		...mapMutations({
 			'setPlaySrc':'setPlaySrc',
 			'setPlayState':'setPlayState',
+			'setCurPlayIndex':'setCurPlayIndex',
+			'setSong':'setSong'
 		}),
 	}
 }
@@ -118,6 +154,12 @@ export default{
 	    animation: circleAni 5s linear;
 	    animation-iteration-count:infinite;
 		-webkit-animation-iteration-count:infinite; /* Safari 和 Chrome */
+		&.thumb-pause{
+	    	animation-play-state:running;
+	    }
+	    &.thumb-play{
+	    	animation-play-state:paused;
+	    }
 	    @keyframes circleAni{
 	    	from{
 	    		transform:rotateZ(0deg)

@@ -1,6 +1,6 @@
 <template>
 	<transition name="songlist">	
-	  <div class="song-list" v-show="showState" @click.self="close()">
+	  <div class="song-list" v-show="showState" @click.stop @click.self="close()">
 	  	 <div class="list-operator">
 	  	 	<span class="play-mode">
 		  	 	<i></i>
@@ -14,8 +14,8 @@
 				<div class="list-con">
 					<div class="songs">
 						<ul>
-							<router-link to="" v-for="(song,k) in getPlayListSong" :key="song.musicData.songmid" @click.native = "playList">
-							<li>
+							<router-link :to="'/play/' + song.musicData.songmid + '/' + song.musicData.albummid" v-for="(song,k) in getPlayListSong" :key="song.musicData.songmid" @click.native = "playList(song,k)">
+							<li :class="{active:getCurPlayIndex===k}">
 								<span class="song-name cur">{{song.musicData.songname}}</span> 
 								<span class="song-operator">
 									<i class="icon-op icon-favorate"></i> 
@@ -48,7 +48,8 @@ export default{
 	computed:{
 		...mapGetters([
 			'getPlayListSong',
-			'getCurPlayIndex'
+			'getCurPlayIndex',
+			'getPlayState'
 		])
 	},
 	props:{
@@ -61,9 +62,16 @@ export default{
 		close(){
 			this.$emit('close-play-list',false)
 		},
-		playList(){
-			console.log(this.getCurPlayIndex)
-		}
+		playList(song,i){
+			this.setCurPlayIndex(i);
+			this.setSong(song);
+			this.setPlayState(true);
+		},
+		...mapMutations({
+			'setPlayState':'setPlayState',
+			'setCurPlayIndex':'setCurPlayIndex',
+			'setSong':'setSong',
+		})
 	}
 }
 </script>

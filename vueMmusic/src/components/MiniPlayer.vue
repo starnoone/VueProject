@@ -1,5 +1,5 @@
 <template>
-	<div class="miniPlayer">
+	<div class="miniPlayer" @click="miniPlayTo">
 		<!-- S 歌曲封面 -->
 		<div class="player-thumb" :class="[getPlayState?'thumb-pause':'thumb-play']">
 			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+ getSong.musicData.albummid +'.jpg'">
@@ -11,8 +11,8 @@
 	   	</div>
 		
 		<div class="song-operator">
-	   		<a href="javascript:" class="play-paused" :class="[getPlayState?'pause':'play']"  @click="playOrPause()"></a>
-	   		<a href="javascript:" class="song-list" @click="playListStatus()"></a>
+	   		<a href="javascript:" class="play-paused" :class="[getPlayState?'pause':'play']"  @click.stop="playOrPause()"></a>
+	   		<a href="javascript:" class="song-list" @click.stop="playListStatus()"></a>
 	   	</div>
 		<!-- S 播放器 -->
 		<div class="audio">
@@ -67,6 +67,9 @@ export default{
 		closePlayList(){
 			this.playListState = false
 		},
+		miniPlayTo(){
+			this.$router.push({path:"/play/"+this.getSong.musicData.songmid+"/"+this.getSong.musicData.albummid});
+		}
 	}
 }
 </script>
