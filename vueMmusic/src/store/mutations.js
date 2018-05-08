@@ -6,7 +6,7 @@ export const setPlaySrc = (state,src)=>{
 export const setPlayState = (state,playState)=>{
 	state.playState = playState;
 }
-//设置歌曲信息
+//设置当前播放歌曲信息
 export const setSong = (state,songs)=>{
 	state.song = songs;
 }
