@@ -77,7 +77,6 @@ export default{
 	watch:{
 		searchKey:function(){
 			this._search();
-			this._show();
 			
 		}
 	},
@@ -87,14 +86,11 @@ export default{
 			let url = searchApi.searchApi + this.searchKey;
 			jsonp(url,{param:'jsonpCallback'},(err,data)=>{
 				this.songlist = data.data;
+				this._show();
 			})
 		},
 		_show:function(){
-			if(this.searchKey === ""){
-				this.showState = true;
-			}else{
-				this.showState = false;
-			}
+			this.showState = this.searchKey === "" ? true : false;
 		},
 		addSong:function(song){
 			song = {musicData:song};
