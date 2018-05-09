@@ -1,5 +1,5 @@
 <template>
-	<div class="miniPlayer" @click="miniPlayTo">
+	<div class="miniPlayer" @click="miniPlayTo" v-if="miniShow">
 		<!-- S 歌曲封面 -->
 		<div class="player-thumb" :class="[getPlayState?'thumb-pause':'thumb-play']">
 			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+ getSong.musicData.albummid +'.jpg'">
@@ -35,10 +35,16 @@ export default{
 	data(){
 		return {
 			playListState:false,
+			miniShow:false
 		}
 	},
 	components:{
 		PlayList
+	},
+	watch:{
+		getSong:function(newWord,oldWord){
+			this.miniShow = this.getSong == {}?false:true;	
+		}
 	},
 	computed:{
 		...mapGetters([

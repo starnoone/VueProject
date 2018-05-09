@@ -8,7 +8,7 @@
 			<div class="content">
 				<div class="song-list">
 					<ul>
-						<router-link :to="'/play/' + song.musicData.songmid + '/' + song.musicData.albummid" tag="div" v-for="(song,k) in singerDetail.list" @click.native="watchSong(song)">
+						<router-link :to="'/play/' + song.musicData.songmid + '/' + song.musicData.albummid" tag="div" v-for="(song,k) in singerDetail.list" :key="k" @click.native="watchSong(song)">
 							<li>
 								<h2 v-text="song.musicData.songname"></h2>
 								<p>{{song.musicData.singer[0].name}} - {{song.musicData.albumname}}</p>

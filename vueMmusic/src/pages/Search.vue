@@ -6,14 +6,14 @@
 			<!-- S 输入框 -->
 			<div class="search-form">
 		        <input placeholder="搜索歌曲、歌手" v-model="searchKey">
-		        <i class="delete"></i>
+		        <i class="delete" @click="clearKey"></i>
 		    </div>
 			<!-- E 输入框 -->
 			<!-- S 热搜词会 -->
 			<div class="hotkey" v-if="showState">
 		        <h2>热门搜索</h2>
 		        <div class="hotkey-list">
-		            <span v-for = "(key,i) in hotkeys" :key="key.n" v-text="key.k"></span>
+		            <span v-for = "(key,i) in hotkeys" :key="key.n" v-text="key.k" @click="cHotkey(key.k)"></span>
 		        </div>
 		    </div>
 		    <!-- E 热搜词会 -->
@@ -24,7 +24,7 @@
 		            <ul>
 		              <!-- S 歌手直达 -->
 		              <router-link :to="'/singer/'+songlist.zhida.singermid">
-		                <li class="singer" v-if="!songlist.zhida.type == 0" v-text="this.songlist.zhida.singername"></li>
+		                <li class="singer" v-if="!(songlist.zhida.type == 0)" v-text="this.songlist.zhida.singername"></li>
 		              </router-link>
 		              <!-- E 歌手直达 -->
 
@@ -50,7 +50,8 @@ import HeaderTab from '@/components/HeaderTab';
 
 //引入jsonp
 import jsonp from 'jsonp';
-
+//引入better-scroll
+import BScroll from 'better-scroll';
 //引入API
 import searchApi from '../api/searchApi';
 
@@ -77,6 +78,7 @@ export default{
 		searchKey:function(){
 			this._search();
 			this._show();
+			
 		}
 	},
 	methods:{
@@ -85,8 +87,6 @@ export default{
 			let url = searchApi.searchApi + this.searchKey;
 			jsonp(url,{param:'jsonpCallback'},(err,data)=>{
 				this.songlist = data.data;
-				console.log(this.songlist);
-
 			})
 		},
 		_show:function(){
@@ -103,6 +103,12 @@ export default{
 			//加入播放列表
 			this.setPlayListSong(song);
 
+		},
+		cHotkey:function(key){
+			this.searchKey = key;
+		},
+		clearKey:function(){
+			this.searchKey = '';
 		},
 		...mapMutations({
 			'setSong':'setSong',

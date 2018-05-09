@@ -65,7 +65,6 @@ export default{
 			this.getIndexTool();
 			this.getOrderSingerList(data.data.list);
 			this.LoadingState = false;
-			console.log(this.singerList);
 		});
 
 		this.myScroll = new BScroll('.singer-wrapper',{
@@ -111,14 +110,17 @@ export default{
 				this.singerList.push(temp);
 			}
 			//去掉singer为空的数据
+			let templist = [];
+			let temindex = [];
 			this.singerList.map((item,j)=>{
 				let len = item.singer.length;
-				if(len <= 0){
-					this.singerList.splice(j,1);
-					this.indexTool.splice(j,1);
+				if(len > 0){
+					templist.push(item);
+					temindex.push(this.indexTool[j]);
 				}
 			})
-			
+			this.singerList = templist;
+			this.indexTool = temindex;
 		},
 		getIndexTool:function(){//获取index索引
 			let indexArr = ['热'];
