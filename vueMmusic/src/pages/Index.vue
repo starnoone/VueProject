@@ -22,18 +22,20 @@
 					<h2>歌曲排行榜</h2>
 					<div class="song-container">
 						<ul>
-							<li v-for = "(v,k) in songlist" :key="v.data.songid">
-								<div class="thumb">
-									<img :src="'https://y.gtimg.cn/music/photo_new/T002R90x90M000'+v.data.albummid+'.jpg?max_age=2592000'">
-								</div>
-								<div class="info">
-									<span class="song-name">{{v.data.songname}}</span>
-									<span class="songer-name">{{v.data.singer[0].name}}</span>
-								</div>
-								<div class="play-time">
-									{{v.data.interval | getTime}}
-								</div>
-							</li>
+							<router-link :to="'/play/' + v.data.songmid + '/' + v.data.albummid" v-for = "(v,k) in songlist" :key="v.data.songid" @click.native="indexAddSong(v)">
+								<li>
+									<div class="thumb">
+										<img v-lazy="'https://y.gtimg.cn/music/photo_new/T002R90x90M000'+v.data.albummid+'.jpg?max_age=2592000'">
+									</div>
+									<div class="info">
+										<span class="song-name">{{v.data.songname}}</span>
+										<span class="songer-name">{{v.data.singer[0].name}}</span>
+									</div>
+									<div class="play-time">
+										{{v.data.interval | getTime}}
+									</div>
+								</li>
+							</router-link>
 						</ul>
 					</div>
 				</div>
@@ -55,6 +57,8 @@ import indexApi from '../api/indexApi';
 
 //引入jsonp
 import jsonp from 'jsonp';
+//引入Vuex
+import {mapGetters,mapMutations} from 'vuex';
 
 //引入swiper插件
 import Swiper from 'swiper';
@@ -78,6 +82,11 @@ export default{
 		HeaderTab,
 		Loading
 	},
+	computed:{
+		...mapGetters([
+			'getPlayListSong'
+		])
+	},
 	filters:{
 		getTime:function(t){
 			var m = parseInt(t/60);
@@ -95,6 +104,7 @@ export default{
 		//调用better-scroll
 		this.myScroll = new BScroll('.toplist-wrapper',{
 			scrollY:true,
+			click:true,
 			pullUpLoad:{
 				threshold:50
 			}
@@ -130,7 +140,33 @@ export default{
 					})
 				})
 			});
-		}
+		},
+		indexAddSong(song){
+			var indexSong = {musicData:song.data};
+			this.setSong(indexSong);
+			//初始化状态
+			this.setPlayState (true);
+
+			//防止数据重复
+			let flag = 0;
+			let songId = indexSong.musicData.songid;
+			this.getPlayListSong.forEach((val,k)=>{
+				if(songId == val.musicData.songid){
+					flag++;
+				}
+			});
+			if(flag<=0){
+				this.setPlayListSong(indexSong);
+				this.setCurPlayIndex(this.getPlayListSong.length-1);
+			}
+		},
+		...mapMutations({
+			'setSong':'setSong',
+			'setPlayListSong':'setPlayListSong',
+			'setCurPlayIndex':'setCurPlayIndex',
+			'setPlayState':'setPlayState',
+			'setPlaySrc':'setPlaySrc'
+		}),
 	}
 }
 </script>
@@ -187,7 +223,6 @@ export default{
 				.thumb{
 					width:60px;
 					height:60px;
-					background-color: pink;
 					img{
 						width:100%;
 						height: 100%;

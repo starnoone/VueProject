@@ -1,4 +1,4 @@
-//设置播放列表
+//设置播放路径
 export const setPlaySrc = (state,src)=>{
 	state.playSrc = src;
 }
