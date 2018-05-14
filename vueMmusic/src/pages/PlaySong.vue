@@ -1,23 +1,25 @@
 <template>
-	<div class="play-song">
-		<div class="header">
-			<h1><i @click="back"></i>{{getSong.musicData.singer[0].name}}</h1>
-			<span>{{getSong.musicData.songname}}</span>
+	<transition name="playSong">
+		<div class="play-song">
+			<div class="header">
+				<h1><i @click="back"></i>{{getSong.musicData.singer[0].name}}</h1>
+				<span>{{getSong.musicData.songname}}</span>
+			</div>
+			<div class="playing" :class="[getPlayState?'thumb-pause':'thumb-play']">
+				<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+getSong.musicData.albummid+'.jpg?max_age=2592000'">
+			</div>
+			<div class="opt-btn">
+				<a href="javascript:" class="mode"></a>
+				<a href="javascript:" class="prev" @click="playPrev"></a>
+				<a href="javascript:" class="playPause" :class="[getPlayState?'pause':'play']" @click="playOrPause"></a>
+				<a href="javascript:" class="next" @click="playNext"></a>
+				<a href="javascript:" class="like"></a>
+			</div>
+			<div class="bg-alb">
+				<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+getSong.musicData.albummid+'.jpg?max_age=2592000'">
+			</div>
 		</div>
-		<div class="playing" :class="[getPlayState?'thumb-pause':'thumb-play']">
-			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+getSong.musicData.albummid+'.jpg?max_age=2592000'">
-		</div>
-		<div class="opt-btn">
-			<a href="javascript:" class="mode"></a>
-			<a href="javascript:" class="prev" @click="playPrev"></a>
-			<a href="javascript:" class="playPause" :class="[getPlayState?'pause':'play']" @click="playOrPause"></a>
-			<a href="javascript:" class="next" @click="playNext"></a>
-			<a href="javascript:" class="like"></a>
-		</div>
-		<div class="bg-alb">
-			<img :src="'https://y.gtimg.cn/music/photo_new/T002R300x300M000'+getSong.musicData.albummid+'.jpg?max_age=2592000'">
-		</div>
-	</div>
+	</transition>
 </template>
 
 <script>
@@ -235,5 +237,14 @@ export default{
 			background-position: center center;
 	    }
 	}
+}
+.playSong-enter-active,.playSong-leave-active{
+	transition: all .3s ease;
+}
+.playSong-enter,.playSong-leave-to{
+	margin-top:700px;
+}
+.playSong-enter-to,.playSong-leave{
+	margin-top:0px;
 }
 </style>

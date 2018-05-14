@@ -1,27 +1,29 @@
 <template>
-	<div class="singer-detail">
-		<div class="header">
-			<h1><i @click="back"></i>{{singerDetail.singer_name}}</h1>
-		</div>
-		<div class="thumb" v-html="thumb"></div>
-		<div class="detail-wrapper">
-			<div class="content">
-				<div class="song-list">
-					<ul>
-						<router-link :to="'/play/' + song.musicData.songmid + '/' + song.musicData.albummid" tag="div" v-for="(song,k) in singerDetail.list" :key="k" @click.native="watchSong(song)">
-							<li>
-								<h2 v-text="song.musicData.songname"></h2>
-								<p>{{song.musicData.singer[0].name}} - {{song.musicData.albumname}}</p>
-							</li>
-						</router-link>
-					</ul>
+	<transition name="singerDetail">
+		<div class="singer-detail">
+			<div class="header">
+				<h1><i @click="back"></i>{{singerDetail.singer_name}}</h1>
+			</div>
+			<div class="thumb" v-html="thumb"></div>
+			<div class="detail-wrapper">
+				<div class="content">
+					<div class="song-list">
+						<ul>
+							<router-link :to="'/play/' + song.musicData.songmid + '/' + song.musicData.albummid" tag="div" v-for="(song,k) in singerDetail.list" :key="k" @click.native="watchSong(song)">
+								<li>
+									<h2 v-text="song.musicData.songname"></h2>
+									<p>{{song.musicData.singer[0].name}} - {{song.musicData.albumname}}</p>
+								</li>
+							</router-link>
+						</ul>
+					</div>
 				</div>
 			</div>
+			<!-- S Loading -->
+			<Loading :state="LoadingState"></Loading>
+			<!-- E Loading -->
 		</div>
-		<!-- S Loading -->
-		<Loading :state="LoadingState"></Loading>
-		<!-- E Loading -->
-	</div>
+	</transition>
 </template>
 
 <script>
